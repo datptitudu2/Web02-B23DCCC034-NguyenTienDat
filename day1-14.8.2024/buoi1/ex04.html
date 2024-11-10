@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xóa phần tử khỏi DOM</title>
+</head>
+<body>
+    <div id="remove-me">Đây là phần tử sẽ bị xóa</div>
+    <button id="removeButton">Xóa phần tử</button>
+
+    <script>
+        document.getElementById('removeButton').addEventListener('click', function() {
+            var elementToRemove = document.getElementById('remove-me');
+            if (elementToRemove) {
+                elementToRemove.remove();
+            }
+        });
+    </script>
+</body>
+</html>

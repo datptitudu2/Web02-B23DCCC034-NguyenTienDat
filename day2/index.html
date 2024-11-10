@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý sinh viên</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color:#fff;
+        }
+
+        #container {
+            width: 80%;
+            max-width: 800px;
+            padding: 20px;
+            background-color: #fff;
+            border: 4px solid black;
+            border-radius: 4px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input, select, button {
+            margin: 5px;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Quản lý sinh viên</h1>
+        <form id="student-form">
+            <input type="text" id="maSinhVien" placeholder="Mã sinh viên" required>
+            <input type="text" id="hoTen" placeholder="Họ và tên" required>
+            <select id="gioiTinh" required>
+                
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+            </select>
+            <input type="date" id="ngaySinh" required>
+            <input type="text" id="queQuan" placeholder="Quê quán" required>
+            <button type="submit">Thêm/Sửa</button>
+        </form>
+        <table id="studentTable">
+            <thead>
+                <tr>
+                    <th>Mã SV</th>
+                    <th>Họ tên</th>
+                    <th>Giới tính</th>
+                    <th>Ngày sinh</th>
+                    <th>Quê quán</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <script>
+        class SinhVien {
+            constructor(ma, ten, gioiTinh, ngaySinh, que) {
+                this.maSV = ma;
+                this.hoTen = ten;
+                this.gioiTinh = gioiTinh;
+                this.ngaySinh = ngaySinh;
+                this.queQuan = que;
+            }
+        }
+
+        class QuanLySinhVien {
+            constructor() {
+                this.dsSinhVien = JSON.parse(localStorage.getItem('students')) || [];
+                this.tableBody = document.querySelector('#studentTable tbody');
+                this.form = document.getElementById('student-form');
+                this.chisohientai = null;
+                this.hienThiSinhVien();
+                this.addEventListeners();
+            }
+
+            addEventListeners() {
+                this.form.addEventListener('submit', (ob) => {
+                    ob.preventDefault();
+                    const ma = document.getElementById('maSinhVien').value;
+                    const ten = document.getElementById('hoTen').value;
+                    const gioiTinh = document.getElementById('gioiTinh').value;
+                    const ngaySinh = document.getElementById('ngaySinh').value;
+                    const que = document.getElementById('queQuan').value;
+
+                    const sinhVien = new SinhVien(ma, ten, gioiTinh, ngaySinh, que);
+                    this.themSinhVien(sinhVien);
+                });
+            }
+
+            hienThiSinhVien() {
+                this.tableBody.innerHTML = '';
+                this.dsSinhVien.forEach((sv, index) => {
+                    const row = `<tr>
+                        <td>${sv.maSV}</td>
+                        <td>${sv.hoTen}</td>
+                        <td>${sv.gioiTinh}</td>
+                        <td>${sv.ngaySinh}</td>
+                        <td>${sv.queQuan}</td>
+                        <td>
+                            <button onclick="quanLySinhVien.chinhSua(${index})">Sửa</button>
+                            <button onclick="quanLySinhVien.xoaSinhVien(${index})">Xóa</button>
+                        </td>
+                    </tr>`;
+                    this.tableBody.insertAdjacentHTML('beforeend', row);
+                });
+            }
+
+            themSinhVien(sinhVien) {
+                if (this.chisohientai === null) {
+                    this.dsSinhVien.push(sinhVien);
+                } else {
+                    this.dsSinhVien[this.chisohientai] = sinhVien;
+                    this.chisohientai = null;
+                }
+                this.capNhatLocalStorage();
+                this.hienThiSinhVien();
+                this.form.reset();
+            }
+
+            chinhSua(index) {
+                const sv = this.dsSinhVien[index];
+                document.getElementById('maSinhVien').value = sv.maSV;
+                document.getElementById('hoTen').value = sv.hoTen;
+                document.getElementById('gioiTinh').value = sv.gioiTinh;
+                document.getElementById('ngaySinh').value = sv.ngaySinh;
+                document.getElementById('queQuan').value = sv.queQuan;
+                this.chisohientai = index;
+            }
+
+            xoaSinhVien(index) {
+                this.dsSinhVien.splice(index, 1);
+                this.capNhatLocalStorage();
+                this.hienThiSinhVien();
+            }
+
+            capNhatLocalStorage() {
+                localStorage.setItem('students', JSON.stringify(this.dsSinhVien));
+            }
+        }
+
+    
+        const quanLySinhVien = new QuanLySinhVien();
+    </script>
+</body>
+</html>

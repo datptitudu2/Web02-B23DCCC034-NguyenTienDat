@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>This is paragraph 1.</p>
+    <p>This is paragraph 2.</p>
+    <p>This is paragraph 3.</p>
+    <button id="btn">Click me to change</button>
+<script>
+    document.getElementById('btn').addEventListener('click', function() {
+        const paragraphs = document.getElementsByTagName("p");
+
+        for (let i = 0; i < paragraphs.length; i++) {
+            paragraphs[i].textContent = "Updated paragraph";
+        }
+    });
+</script>
+
+</body>
+</html>

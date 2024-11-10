@@ -1,0 +1,126 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color:darksalmon;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+
+.add-task {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.add-task input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.add-task button {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.add-task button:hover {
+    background-color: #45a049;
+}
+
+/* Danh sách task */
+.task {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.2s;
+}
+
+.task:hover {
+    background-color: #f9f9f9;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.checkbox input[type="radio"] {
+    cursor: pointer;
+}
+
+.checkbox p {
+    margin: 0;
+    font-size: 16px;
+}
+
+.line_through {
+    text-decoration: line-through;
+    color: #888;
+}
+
+/* edit và delete */
+.task button {
+    padding: 5px 10px;
+    background-color: #2196f3;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.task button:hover {
+    background-color: #1976d2;
+}
+
+.task .icon {
+    font-size: 18px;
+    color: #ff4444;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.task .icon:hover {
+    color: #ff0000;
+}
+
+/* không có task */
+.no-record {
+    text-align: center;
+    color: #888;
+    margin-top: 20px;
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm phần tử vào DOM</title>
+</head>
+<body>
+    <ul id="list">
+        <li> 1</li>
+        <li> 2</li>
+        <li> 3</li>
+    </ul>
+
+    <button id="themsukien">Thêm mục mới</button>
+
+    <script>
+        document.getElementById('themsukien').addEventListener('click', function() {
+            var newItem = document.createElement('li');
+            newItem.textContent = 'Item mới';
+            document.getElementById('list').appendChild(newItem);
+        });
+    </script>
+</body>
+</html>

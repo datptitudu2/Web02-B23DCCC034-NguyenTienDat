@@ -1,0 +1,266 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --background-color: #f5f7fa;
+  --text-color: #34495e;
+  --border-color: #e0e0e0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.container-cong-viec {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffc107;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+.tieu-de-cong-viec {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #f44336;
+  margin-bottom: 1.5rem;
+  text-align: center; 
+}
+
+.icon-tieu-de-cong-viec {
+  margin-left: 0.5rem;
+  font-size: 2rem;
+}
+
+.bo-loc-cong-viec {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.container-tim-kiem {
+  position: relative;
+  flex-grow: 1;
+  margin-right: 1rem;
+}
+
+.icon-tim-kiem {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-color);
+}
+
+.input-tim-kiem {
+  width: 90%;
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.input-tim-kiem:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.select-loc {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.select-loc:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.danh-sach-cong-viec {
+  list-style-type: none;
+  padding: 0;
+}
+
+.item-cong-viec {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 5px var(--shadow-color);
+  transition: all 0.3s ease;
+}
+
+.item-cong-viec:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.item-cong-viec button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.item-cong-viec button:hover {
+  transform: scale(1.1);
+}
+
+.text-item-cong-viec {
+  flex-grow: 1;
+  margin: 0 1rem;
+  font-size: 1.1rem;
+}
+
+.text-item-cong-viec.hoan-thanh {
+  font-weight: bold;
+  color: #2ecc71;
+}
+
+.uu-tien-item-cong-viec {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.uu-tien-item-cong-viec.low {
+  background-color: #e5f6fd;
+  color: #03a9f4;
+}
+
+.uu-tien-item-cong-viec.medium {
+  background-color: #fff8e1;
+  color: #ffc107;
+}
+
+.uu-tien-item-cong-viec.high {
+  background-color: #fde0e0;
+  color: #f44336;
+}
+
+.ngay-han-item-cong-viec {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin-left: auto;
+}
+
+.icon-lich {
+  margin-right: 0.5rem;
+}
+
+.container-input-cong-viec {
+  display: flex;
+  margin-top: 2rem;
+  gap: 0.5rem;
+}
+
+.input-cong-viec,
+.input-ngay-han,
+.select-uu-tien {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  flex-grow: 1;
+  transition: all 0.3s ease;
+}
+
+.input-cong-viec:focus,
+.input-ngay-han:focus,
+.select-uu-tien:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.nut-them-cong-viec {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 5px; 
+  box-shadow: 0 2px 5px var(--shadow-color); 
+}
+
+.nut-them-cong-viec:hover {
+  background-color: #2ecc71;
+}
+
+.input-chinh-sua,
+.input-ngay-han-chinh-sua,
+.select-uu-tien-chinh-sua {
+  margin-right: 5px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.nut-luu-chinh-sua,
+.nut-huy-chinh-sua {
+  padding: 5px 10px;
+  margin-left: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.nut-luu-chinh-sua {
+  background-color: #4caf50;
+  color: white;
+}
+
+.nut-huy-chinh-sua {
+  background-color: #f44336;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .container-cong-viec {
+    padding: 1rem;
+  }
+
+  .bo-loc-cong-viec {
+    flex-direction: column;
+  }
+
+  .container-tim-kiem {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+
+  .container-input-cong-viec {
+    flex-wrap: wrap;
+  }
+
+  .input-cong-viec,
+  .input-ngay-han,
+  .select-uu-tien,
+  .nut-them-cong-viec {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+}

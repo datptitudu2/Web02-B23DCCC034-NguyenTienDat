@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var myFn=(name,age)=> console.log(name,age)
+        myFn('nguyen tien dat',19);
+        var member=()=> {
+            console.log('Duong Minh Tri')
+        }
+        member();
+
+        var a=[1,2,3];
+        var arr=()=> console.log(a[0]);
+        arr()
+
+
+        /* es6 classes */
+        class Member {
+            constructor() {
+                this.name='Duong Minh Tri'
+            }
+        }
+        var x= new Member();
+        console.log(x.name)
+
+
+        
+        /* classses method */Member
+        class MEMBER {
+            constructor() {
+                this.name='Nguyen Tien Dat';
+            }
+            memberName() {
+                return this.name
+            }
+        }
+        var z= new MEMBER();
+        console.log(z.memberName());
+
+        class thanhvien {
+            constructor() {
+                this.name='NTD'
+            }
+            memname(){
+                return this.name
+            }
+        }
+
+        class User extends thanhvien {
+            constructor(name,age) {
+                super(name);
+                this.age=4
+            }
+        memberInfo() {
+            return this.memname()+'Tuoi'+this.age
+        }
+        
+        }
+        var userr= new User()
+        console.log(x.memberInfo())
+        </script>
+</body>
+</html>
