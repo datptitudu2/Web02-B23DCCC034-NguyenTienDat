@@ -37,7 +37,7 @@ function Home() {
                 setEditingText('');
             })
             .catch(err => console.log(err));
-    };
+    };3
 
     const handleDelete = (id) => {
         axios.delete(`http://localhost:3001/delete/${id}`)

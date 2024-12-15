@@ -1,0 +1,24 @@
+/* App.css */
+
+/* Xóa tất cả gạch chân màu xanh */
+h1::after,
+h2::after,
+h3::after,
+.heading::after,
+section h2::after,
+.title::after,
+.section-title::after {
+    display: none !important;
+    content: none !important;
+    border-bottom: none !important;
+    background: none !important;
+}
+
+/* Xóa gạch chân cho các phần tử có class chứa từ 'title' hoặc 'heading' */
+[class*="title"]::after,
+[class*="heading"]::after {
+    display: none !important;
+    content: none !important;
+    border-bottom: none !important;
+    background: none !important;
+}
