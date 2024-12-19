@@ -11,7 +11,7 @@ function MuonTraSach() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Xử lý logic mượn sách
+   
     console.log('Form submitted:', borrowForm);
   };
 
