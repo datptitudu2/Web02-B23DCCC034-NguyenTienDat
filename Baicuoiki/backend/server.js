@@ -1,27 +1,39 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
+const authRoutes = require('./routes/auth.routes');
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// CORS config
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
+
 app.use(express.json());
 
-// Routes
-app.use('/api/auth', require('./routes/auth.routes'));
-app.use('/api/books', require('./routes/book.routes'));
-app.use('/api/services', require('./routes/service.routes'));
-app.use('/api/borrow', require('./routes/borrow.routes'));
-app.use('/api/news', require('./routes/news.routes'));
-app.use('/api/users', require('./routes/user.routes')); // Thêm route users
-
-// Test route
-app.get('/test', (req, res) => {
-    res.json({ message: 'Server is running' });
+// Debug middleware
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    console.log('Body:', req.body);
+    next();
 });
 
-const PORT = process.env.PORT || 5000;
+// Routes
+app.use('/api/auth', authRoutes);
+
+// Error handling
+app.use((err, req, res, next) => {
+    console.error('Server Error:', err);
+    res.status(500).json({
+        success: false,
+        message: err.message || 'Internal Server Error'
+    });
+});
+
+const PORT = 5000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });

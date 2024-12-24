@@ -4,65 +4,88 @@ const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
     try {
-        const { username, password, fullName, email, studentId, phoneNumber } = req.body;
+        const { username, password, fullName, email } = req.body;
 
-        // Check if user exists
+        // Check if username exists
         const [existingUsers] = await db.execute(
-            'SELECT * FROM users WHERE username = ? OR email = ?',
-            [username, email]
+            'SELECT id FROM users WHERE username = ?',
+            [username]
         );
 
         if (existingUsers.length > 0) {
-            return res.status(400).json({ message: 'Username or email already exists' });
+            return res.status(400).json({
+                success: false,
+                message: 'Username already exists'
+            });
         }
 
         // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         // Insert new user
         const [result] = await db.execute(
-            'INSERT INTO users (username, password, fullName, email, studentId, phoneNumber) VALUES (?, ?, ?, ?, ?, ?)',
-            [username, hashedPassword, fullName, email, studentId, phoneNumber]
+            'INSERT INTO users (username, password, fullName, email, role) VALUES (?, ?, ?, ?, ?)',
+            [username, hashedPassword, fullName, email, 'user']
         );
 
-        res.status(201).json({ message: 'User registered successfully' });
+        res.status(201).json({
+            success: true,
+            message: 'User registered successfully'
+        });
+
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        console.error('Register error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error'
+        });
     }
 };
 
 exports.login = async (req, res) => {
     try {
         const { username, password } = req.body;
+        console.log('Login attempt:', { username }); // Debug log
 
-        // Find user
+        // Get user
         const [users] = await db.execute(
             'SELECT * FROM users WHERE username = ?',
             [username]
         );
 
-        if (users.length === 0) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+        if (!users || users.length === 0) {
+            console.log('User not found'); // Debug log
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid username or password'
+            });
         }
 
         const user = users[0];
+        console.log('Found user:', { id: user.id, username: user.username }); // Debug log
 
-        // Check password
-        const isValidPassword = await bcrypt.compare(password, user.password);
+        // Verify password
+        const validPassword = await bcrypt.compare(password, user.password);
+        console.log('Password verification:', validPassword); // Debug log
 
-        if (!isValidPassword) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+        if (!validPassword) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid username or password'
+            });
         }
 
         // Generate token
         const token = jwt.sign(
-            { id: user.id, role: user.role },
+            { id: user.id, username: user.username, role: user.role },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
         );
 
         res.json({
+            success: true,
+            message: 'Login successful',
             token,
             user: {
                 id: user.id,
@@ -72,8 +95,52 @@ exports.login = async (req, res) => {
                 role: user.role
             }
         });
+
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        console.error('Login error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error'
+        });
     }
+};
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Check if email exists
+    const [users] = await db.execute(
+      'SELECT * FROM users WHERE email = ?',
+      [email]
+    );
+
+    if (users.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Generate reset token
+    const resetToken = jwt.sign(
+      { id: users[0].id },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    // In thực tế, gửi email với link reset password
+    // Ở đây chỉ trả về token để test
+    res.json({
+      success: true,
+      message: 'Reset password instructions sent to email',
+      resetToken // Trong thực tế không nên trả về token
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
 };

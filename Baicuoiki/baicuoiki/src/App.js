@@ -1,57 +1,65 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import TrangChu from './pages/TrangChu';
-import Login from './pages/Login';
-import OpeningHours from './pages/OpeningHours';
-import Rules from './pages/Rules';
-import Tintuc from './pages/Tintuc';
-import Search from './pages/Search';
-import DanhMucSach from './pages/DanhMucSach';
-import MuonTraSach from './pages/MuonTraSach';
-import ThongTinDocGia from './pages/ThongTinDocGia';
-import Contact from './pages/Contact';
-import Services from './pages/Services';
-import Register from './pages/Register';
-import Profile from './pages/Profile';
-import DigitalLibrary from './pages/DigitalLibrary';
-import Help from './pages/Help';
-import PhongDoc from './pages/PhongDoc';
-import TaiLieuSo from './pages/TaiLieuSo';
-import InAn from './pages/InAn';
-import HoTroTraCuu from './pages/HoTroTraCuu';
-import DaoTao from './pages/DaoTao';
+import { useState, useEffect } from 'react';
+import Header from './components/Layout/Header/Header';
+import Footer from './components/Layout/Footer/Footer';
+import HomePage from './pages/Home/HomePage';
+import BookList from './components/Books/BookList/BookList';
+import BookDetail from './pages/Books/BookDetail';
+import LoginPage from './pages/Auth/LoginPage/LoginPage';
+import RegisterPage from './pages/Auth/RegisterPage/RegisterPage';
+import Profile from './pages/Profile/ProfilePage';
+import Dashboard from './pages/Admin/Dashboard/Dashboard';
+import BookManagement from './pages/Admin/BookManagement/BookManagement';
+import UserManagement from './pages/Admin/UserManagement/UserManagement';
+import BorrowManagement from './pages/Admin/BorrowManagement/BorrowManagement';
+import userService from './services/userService';
 import './App.css';
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      fetchCurrentUser();
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchCurrentUser = async () => {
+    try {
+      const userData = await userService.getCurrentUser();
+      setUser(userData);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      localStorage.removeItem('token');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Router>
-      <div className="App">
-        <Header />
+      <div className="app">
+        <Header user={user} setUser={setUser} />
         <main className="main-content">
           <Routes>
-            <Route path="/" element={<TrangChu />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/opening-hours" element={<OpeningHours />} />
-            <Route path="/rules" element={<Rules />} />
-            <Route path="/news" element={<Tintuc />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/catalog" element={<DanhMucSach />} />
-            <Route path="/muon-tra-sach" element={<MuonTraSach />} />
-            <Route path="/readers" element={<ThongTinDocGia />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/digital-library" element={<DigitalLibrary />} />
-            <Route path="/help" element={<Help />} />
-            <Route path="/muon-tra-sach" element={<MuonTraSach />} />
-          <Route path="/phong-doc" element={<PhongDoc />} />
-          <Route path="/tai-lieu-so" element={<TaiLieuSo />} />
-          <Route path="/in-an" element={<InAn />} />
-          <Route path="/ho-tro-tra-cuu" element={<HoTroTraCuu />} />
-          <Route path="/dao-tao" element={<DaoTao />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/books" element={<BookList />} />
+            <Route path="/books/:id" element={<BookDetail />} />
+            <Route path="/login" element={<LoginPage setUser={setUser} />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/profile" element={<Profile user={user} setUser={setUser} />} />
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/admin/books" element={<BookManagement />} />
+            <Route path="/admin/users" element={<UserManagement />} />
+            <Route path="/admin/borrows" element={<BorrowManagement />} />
           </Routes>
         </main>
         <Footer />

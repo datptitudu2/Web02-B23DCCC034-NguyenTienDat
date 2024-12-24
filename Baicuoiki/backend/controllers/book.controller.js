@@ -3,11 +3,20 @@ const db = require('../config/db.config');
 // Get all books
 exports.getAllBooks = async (req, res) => {
     try {
-        const [books] = await db.execute('SELECT * FROM books');
-        res.json(books);
+        const [books] = await db.execute(
+            'SELECT * FROM books ORDER BY title'
+        );
+        
+        res.json({
+            success: true,
+            data: books
+        });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        console.error('Get books error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error'
+        });
     }
 };
 
@@ -18,88 +27,78 @@ exports.getBookById = async (req, res) => {
             'SELECT * FROM books WHERE id = ?',
             [req.params.id]
         );
-        
-        if (books.length === 0) {
-            return res.status(404).json({ message: 'Book not found' });
+
+        if (!books || books.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Book not found'
+            });
         }
-        
-        res.json(books[0]);
+
+        res.json({
+            success: true,
+            data: books[0]
+        });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        console.error('Get book error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error'
+        });
     }
 };
 
-// Add new book
+// Add new book (Admin only)
 exports.addBook = async (req, res) => {
     try {
-        const { title, author, category, publisher, year, location, description } = req.body;
-        
-        const [result] = await db.execute(
-            'INSERT INTO books (title, author, category, publisher, year, location, description) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [title, author, category, publisher, year, location, description]
-        );
-        
-        res.status(201).json({ message: 'Book added successfully', id: result.insertId });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
+        // Debug logs
+        console.log('Add book request received');
+        console.log('Headers:', req.headers);
+        console.log('Body:', req.body);
+        console.log('User:', req.user);
 
-// Update book
-exports.updateBook = async (req, res) => {
-    try {
-        const { title, author, category, publisher, year, location, description, available } = req.body;
-        
-        const [result] = await db.execute(
-            'UPDATE books SET title = ?, author = ?, category = ?, publisher = ?, year = ?, location = ?, description = ?, available = ? WHERE id = ?',
-            [title, author, category, publisher, year, location, description, available, req.params.id]
-        );
-        
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Book not found' });
+        const { title, author, description, quantity } = req.body;
+
+        // Validate input
+        if (!title || !author || !quantity) {
+            const missingFields = [];
+            if (!title) missingFields.push('title');
+            if (!author) missingFields.push('author');
+            if (!quantity) missingFields.push('quantity');
+
+            console.log('Missing fields:', missingFields);
+            
+            return res.status(400).json({
+                success: false,
+                message: `Missing required fields: ${missingFields.join(', ')}`
+            });
         }
-        
-        res.json({ message: 'Book updated successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
 
-// Delete book
-exports.deleteBook = async (req, res) => {
-    try {
+        // Insert book
         const [result] = await db.execute(
-            'DELETE FROM books WHERE id = ?',
-            [req.params.id]
+            'INSERT INTO books (title, author, description, quantity) VALUES (?, ?, ?, ?)',
+            [title, author, description || '', parseInt(quantity)]
         );
-        
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Book not found' });
-        }
-        
-        res.json({ message: 'Book deleted successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
 
-// Search books
-exports.searchBooks = async (req, res) => {
-    try {
-        const { query } = req.query;
-        
-        const [books] = await db.execute(
-            'SELECT * FROM books WHERE title LIKE ? OR author LIKE ? OR category LIKE ?',
-            [`%${query}%`, `%${query}%`, `%${query}%`]
-        );
-        
-        res.json(books);
+        console.log('Book added successfully:', result);
+
+        res.status(201).json({
+            success: true,
+            message: 'Book added successfully',
+            data: {
+                id: result.insertId,
+                title,
+                author,
+                description,
+                quantity: parseInt(quantity)
+            }
+        });
+
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        console.error('Add book error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error: ' + error.message
+        });
     }
 };
